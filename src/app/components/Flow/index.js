@@ -14,34 +14,14 @@ import '@xyflow/react/dist/style.css';
 import CustomNode from './Nodes/customNode';
 import './custom-nodes.css';
 
-const initialNodes = [
-  { id: '1', 
-    type: 'customNode',
-    position: { x: 300, y: 100 }, 
-    data: { label: '1' } 
-  },
 
-  { id: '2', 
-    type:  'customNode',
-    position: { x: 400, y: 200 }, 
-    data: { label: '2' } 
-  },
-
-  { id: '3', 
-    type:  'customNode',
-    position: { x: 400, y: 300 }, 
-    data: { label: '3' } 
-  },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
 // we define the nodeTypes outside of the component to prevent re-renderings
 // you could also use useMemo inside the component
 const nodeTypes = { customNode: CustomNode };
  
-const Flow  = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+const Flow  = ({onNodesChange, onEdgesChange, setEdges, edges, nodes}) => {
+  
  
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
