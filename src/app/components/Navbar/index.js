@@ -1,18 +1,27 @@
 
 import React, { useState } from "react";
 import "./Navbar.css";
-export default function Navbar({ addComponent }) {
+export default function Navbar({ addNodeData}) {
 
 
 
   const [showOptions, setShowOptions] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
 
-  const dummy = [{ id: '4', 
-    type:  'customNode',
-    position: { x: 400, y: 500 }, 
-    data: { label: '4', customType: 'AGENT' } 
-  }]
+  const newNode = {
+    id: 'test',
+    data: { label: `test` },
+    position: {
+      x: 500,
+      y: 500
+    }
+  };
+
+  const onAdd = () => {
+    // Use the latest nodes and edges here
+    setNodes((nds) => nds.concat(newNode));
+    //setEdges(edges); // Update edges as well
+  };
 
   let view;
   if (!showOptions) {
@@ -51,13 +60,11 @@ export default function Navbar({ addComponent }) {
             <textarea type="text" />
           </label>
           <br />
-          <button onClick={() => addComponent(dummy)}>Add</button>
+          <button onClick={onAdd}>Add</button>
           <button onClick={() => setSelectedType(null)}>Cancel</button>
         </form>
       </div>
     );
   }
   return view;
-  ;
-
 }

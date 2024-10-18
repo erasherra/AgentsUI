@@ -20,6 +20,7 @@
     background-color: var(--navBg);
     width: 250px;
     height: 100vh;
+    display: flex;
     justify-content: center;
     position: fixed;
     top: 0;
