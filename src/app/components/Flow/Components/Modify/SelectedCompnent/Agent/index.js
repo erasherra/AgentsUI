@@ -2,31 +2,33 @@
 import React, { useState } from "react";
 
 import { formatAgentData } from '@/app/utils/dataFormat';
-export default function Agent({onAdd}) {
+export default function Agent({agent, setModifyData }) {
 
-    const [name, setName] = useState('');
-    const [systemPrompt, setSystemPrompt] = useState('');
-  
+    console.log('TEST',agent)
+    const [name, setName] = useState(agent.label);
+    const [systemPrompt, setSystemPrompt] = useState(agent.customConfig.system_prompt);
+    
+    const handleModification = () => {
+        setModifyData({
+            label: name,
+            customName: name,
+            customType: "AGENT",
+            customConfig: {system_prompt: systemPrompt}
+        });
+    };
     const handleNameChange = (event) => {
         setName(event.target.value);
+        handleModification();
     };
 
     const handleSystemPromptChange = (event) => {
         setSystemPrompt(event.target.value);
+        handleModification();
     };
-
-    const handleAgentCreation = () => {
-        const agent = formatAgentData(name, systemPrompt);
-        if(agent){
-            setName('');
-            setSystemPrompt('');
-            onAdd(agent);
-        }
-    }
 
     return (
       <>
-       <h2>Create Agent</h2>
+       <h2>Modify Agent {agent.id}</h2>
             <div>
             <form>
                     <label>
@@ -43,7 +45,6 @@ export default function Agent({onAdd}) {
                     <br />
                 </form>
                 <div>
-                <button onClick={() => handleAgentCreation()}>Add</button>
             </div>
             </div>
       </>

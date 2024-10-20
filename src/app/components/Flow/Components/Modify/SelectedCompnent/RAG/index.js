@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { formatRAGData } from '@/app/utils/dataFormat';
-export default function RAG({ onAdd }) {
+export default function RAG({ RAG, setModifyData  }) {
 
     const [inputs, setInputs] = useState([{ source: "", type: "TXT" }]);
     const [name, setName] = useState('');
@@ -32,15 +32,14 @@ export default function RAG({ onAdd }) {
         setSystemPrompt(event.target.value);
     };
 
-    const handleRAGCreation = () => {
-        const rag = formatRAGData(name, systemPrompt, inputs);
-        if(rag){
-            setName('');
-            setSystemPrompt('');
-            setInputs([{ source: "", type: "TXT" }]);
-            onAdd(rag);
-        }
-    }
+    const handleModification = () => {
+        setModifyData({
+            label: name,
+            customName: name,
+            customType: "AGENT",
+            customConfig: {system_prompt: systemPrompt}
+        });
+    };
 
     return (
         <div className="container">
@@ -87,9 +86,7 @@ export default function RAG({ onAdd }) {
             ))}
 
             <div className="body"> {JSON.stringify(inputs)} </div>
-            <div>
-                <button onClick={() => handleRAGCreation()}>Add</button>
-            </div>
+
         </div>
     );
 }

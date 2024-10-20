@@ -6,7 +6,8 @@ import {
 } from '@xyflow/react';
 import RAG from "../Components/RAG";
 import Agent from "../Components/Agent";
-export default function SideBar({ onAdd, multiAgentData, setMultiAgentData }) {
+import Modify from "../Components/Modify";
+export default function SideBar({ onAdd, onDelete, onModify, nodes, modifyFocus }) {
 
 
     const [selectedType, setSelectedType] = useState(undefined);
@@ -21,11 +22,14 @@ export default function SideBar({ onAdd, multiAgentData, setMultiAgentData }) {
     };
 
     const typeSettings = () => {
+        if(modifyFocus){
+            return <Modify onDelete={onDelete} onModify={onModify} nodes={nodes} modifyFocus={modifyFocus}/>
+        }
         switch (selectedType) {
             case 'RAG':
-                return <RAG onAdd={onAdd} setMultiAgentData={setMultiAgentData}/>;
+                return <RAG onAdd={onAdd}/>;
             case  'Agent':
-                return  <Agent onAdd={onAdd} setMultiAgentData={setMultiAgentData}/>;
+                return  <Agent onAdd={onAdd}/>;
             default:
                 return  null;
         }
@@ -33,6 +37,7 @@ export default function SideBar({ onAdd, multiAgentData, setMultiAgentData }) {
 
     return (
         <div className="nav-menu active">
+            { modifyFocus == undefined ? (
             <div>
                 <h2>What kind of agent?</h2>
                 <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
@@ -42,6 +47,7 @@ export default function SideBar({ onAdd, multiAgentData, setMultiAgentData }) {
                     <option value="RAG">RAG</option>
                 </select>
             </div>
+            ): null}
             <br />
 
             <div>

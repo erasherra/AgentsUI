@@ -1,5 +1,5 @@
 "use client"
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -24,33 +24,34 @@ const nodeTypes = { customNode: CustomNode };
 
 const initialNodes = [
   {
-    id: '1',
+    id: 'asd',
     type: 'customNode',
     position: { x: 300, y: 100 },
     data: {assigned: { label: '1', customType: 'INPUT' }}
   },
 
   {
-    id: '2',
+    id: 'asd2',
     type: 'customNode',
     position: { x: 400, y: 200 },
     data: {assigned: { label: '2', customType: 'AGENT', customName: 'something', customConfig: { system_prompt: "You are a..." } }}
   },
 
   {
-    id: '3',
+    id: 'asd3',
     type: 'customNode',
     position: { x: 400, y: 300 },
     data: {assigned: { label: '3', customType: 'RAG' }}
   },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialEdges = [{ id: 'easd-asd2', source: 'asd', target: 'asd2' }];
 
 const Flow = () => {
 
-  const [multiAgentData, setMultiAgentData ] = React.useState([]);
+  const [uniqueID, setUniqueID] = useState(0);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [modifyFocus, setModifyFocus] = useState(undefined);
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
@@ -60,10 +61,11 @@ const Flow = () => {
     if (!id || !data) {
       return;
     }
-    const index = nodes.findIndex((node) => node.id === id);
-    if (index >= 0) {
+    const nodeToRemove  = nodes.find((node) =>{console.log('onDelete: ',node.id, id); return node.id === id});
+    if (nodeToRemove) {
       setNodes((nds) =>
-        nds.map((node, i) => (i === index ? { ...node, data: { assigned: data } } : node))
+        
+      nds.map((node) => (node.id === nodeToRemove.id ? { ...node, data: { assigned: data } } : node))
       );
     }
   }, [nodes, setNodes]);
@@ -74,13 +76,15 @@ const Flow = () => {
       return;
     }
     console.log("debug ", nodes )
-    const nodeToRemove  = nodes.find((node) =>{console.log(node.id, id); return node.id === id});
-    console.log("debug2 ", nodes )
+    const nodeToRemove  = nodes.find((node) =>{console.log('onDelete: ',node.id, id); return node.id === id});
+    
     console.log("debug3 ",nodeToRemove )
     if (nodeToRemove) {
       
-      setNodes((nds) => nds.filter((_, i) => i !== nodeToRemove ));
+      setNodes((nds) => nds.filter(item => item.id !== nodeToRemove.id ));
     }
+    console.log("debugx ", nodes )
+    setModifyFocus(undefined)
   }, [nodes, setNodes]);
 
   const test = (d) => {
@@ -91,26 +95,32 @@ const Flow = () => {
     if (!data) {
       return;
     }
-    const id = '' + (nodes.length + 1);
+    const uid = uniqueID + 1;
+    const id = '' + uid;
     const newNode = {
       id: id,
       type: 'customNode',
       data: {assigned: data, 
         functions: 
         { test: test,
-          delete: onDelete}},
+          modify: () => {setModifyFocus(id)}}},
       position: {
         x: 500,
         y: 0 + (nodes.length + 1) * 20
       }
     };
     setNodes((nds) => nds.concat(newNode));
+    setUniqueID(uid);
   }, [nodes, setNodes]);
 
-  console.log("ASD", nodes);
+  //console.log("ASD", nodes);
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <SideBar onAdd={onAdd} multiAgentData={multiAgentData} setMultiAgentData={setMultiAgentData} />
+      <SideBar onAdd={onAdd} 
+      onDelete={onDelete} 
+      onModify={onModify} 
+      modifyFocus={modifyFocus} 
+      nodes={nodes}  />
       <ReactFlow
         nodes={nodes}
         edges={edges}

@@ -27,7 +27,6 @@ function CustomNode({id, data, isConnectable }) {
       <div>
         <label htmlFor="text">{data.assigned.label }</label>
         {modify}
-        {remove}
         {test}
       </div>
       <Handle
