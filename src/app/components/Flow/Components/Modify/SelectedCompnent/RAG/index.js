@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { formatRAGData } from '@/app/utils/dataFormat';
 export default function RAG({ RAG, setModifyData  }) {
 
-    const [inputs, setInputs] = useState([{ source: "", type: "TXT" }]);
-    const [name, setName] = useState('');
-    const [systemPrompt, setSystemPrompt] = useState('');
-
+    const [inputs, setInputs] = useState(RAG.customConfig.sources);
+    const [lable, setLable] = useState(RAG.label);
+    const [systemPrompt, setSystemPrompt] = useState(RAG.customConfig.system_prompt);
+    console.log("RAG", RAG);
     const handleAddInput = () => {
         setInputs([...inputs, { source: "", type: "TXT" }]);
     };
@@ -15,6 +15,12 @@ export default function RAG({ RAG, setModifyData  }) {
         let { name, value } = event.target;
         let onChangeValue = [...inputs];
         onChangeValue[index][name] = value;
+        setModifyData({
+            label: lable,
+            customName: lable,
+            customType: "RAG",
+            customConfig: {system_prompt: systemPrompt, sources: onChangeValue}
+        });
         setInputs(onChangeValue);
     };
 
@@ -25,21 +31,25 @@ export default function RAG({ RAG, setModifyData  }) {
     };
 
     const handleNameChange = (event) => {
-        setName(event.target.value);
+        setModifyData({
+            label: event.target.value,
+            customName: event.target.value,
+            customType: "RAG",
+            customConfig: {system_prompt: systemPrompt, sources: inputs}
+        });
+        setLable(event.target.value);
     };
 
     const handleSystemPromptChange = (event) => {
+        setModifyData({
+            label: lable,
+            customName: lable,
+            customType: "RAG",
+            customConfig: {system_prompt: event.target.value, sources: inputs}
+        });
         setSystemPrompt(event.target.value);
     };
 
-    const handleModification = () => {
-        setModifyData({
-            label: name,
-            customName: name,
-            customType: "AGENT",
-            customConfig: {system_prompt: systemPrompt}
-        });
-    };
 
     return (
         <div className="container">
@@ -48,7 +58,7 @@ export default function RAG({ RAG, setModifyData  }) {
                     <label>
                         Name:
                         <br />
-                        <input type="text" value={name} onChange={handleNameChange} />
+                        <input type="text" value={lable} onChange={handleNameChange} />
                     </label>
                     <br />
                     <label>

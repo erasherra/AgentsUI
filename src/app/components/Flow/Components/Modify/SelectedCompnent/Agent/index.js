@@ -1,29 +1,29 @@
 "use client"
 import React, { useState } from "react";
 
-import { formatAgentData } from '@/app/utils/dataFormat';
 export default function Agent({agent, setModifyData }) {
 
-    console.log('TEST',agent)
     const [name, setName] = useState(agent.label);
     const [systemPrompt, setSystemPrompt] = useState(agent.customConfig.system_prompt);
     
-    const handleModification = () => {
+
+    const handleNameChange = (event) => {setModifyData({
+            label: event.target.value,
+            customName: event.target.value,
+            customType: "AGENT",
+            customConfig: {system_prompt: systemPrompt}
+        });
+        setName(event.target.value);
+    };
+
+    const handleSystemPromptChange = (event) => {
         setModifyData({
             label: name,
             customName: name,
             customType: "AGENT",
-            customConfig: {system_prompt: systemPrompt}
+            customConfig: {system_prompt: event.target.value}
         });
-    };
-    const handleNameChange = (event) => {
-        setName(event.target.value);
-        handleModification();
-    };
-
-    const handleSystemPromptChange = (event) => {
         setSystemPrompt(event.target.value);
-        handleModification();
     };
 
     return (

@@ -7,37 +7,14 @@ import {
 import RAG from "../Components/RAG";
 import Agent from "../Components/Agent";
 import Modify from "../Components/Modify";
-export default function SideBar({ onAdd, onDelete, onModify, nodes, modifyFocus }) {
+import { LLMConfiguration } from "../Components/LLMConfiguration";
+export default function SideBar({ onAdd, onDelete, onModify, onSelectLLM, nodes, modifyFocus, view, setView, llmConfigurations }) {
 
 
     const [selectedType, setSelectedType] = useState(undefined);
 
-    const newNode = {
-        id: 'test',
-        data: { label: `test` },
-        position: {
-            x: 500,
-            y: 500
-        }
-    };
-
-    const typeSettings = () => {
-        if(modifyFocus){
-            return <Modify onDelete={onDelete} onModify={onModify} nodes={nodes} modifyFocus={modifyFocus}/>
-        }
-        switch (selectedType) {
-            case 'RAG':
-                return <RAG onAdd={onAdd}/>;
-            case  'Agent':
-                return  <Agent onAdd={onAdd}/>;
-            default:
-                return  null;
-        }
-    }
-
-    return (
-        <div className="nav-menu active">
-            { modifyFocus == undefined ? (
+    const showComponentCreationView = () => {
+        const ComponentSelection = () => (
             <div>
                 <h2>What kind of agent?</h2>
                 <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
@@ -47,13 +24,57 @@ export default function SideBar({ onAdd, onDelete, onModify, nodes, modifyFocus 
                     <option value="RAG">RAG</option>
                 </select>
             </div>
-            ): null}
-            <br />
+        );
+        switch (selectedType) {
+            case 'RAG':
+                return (<div><ComponentSelection/><RAG onAdd={onAdd}/></div>);
+            case  'Agent':
+                return  (<div><ComponentSelection/><Agent onAdd={onAdd}/></div>);
+            default:
+                return  (<div><ComponentSelection/></div>);
+        }
+    }
 
+    const showComponentModifyView = () => {
+        if(modifyFocus){
+            return <Modify onDelete={onDelete} onModify={onModify} nodes={nodes} modifyFocus={modifyFocus}/>
+        }
+        return null;
+    }
+
+    const showLLMConfigurationView = () => {
+        return (<LLMConfiguration onSelectLLM={onSelectLLM} id={modifyFocus} llmConfigurations={llmConfigurations}/>);
+    }
+
+    const typeSettings = () => {
+        
+        switch (view) {
+            case 'CREATE-COMPONENT':
+                return showComponentCreationView();
+            case  'MODIFY-COMPONENT':
+                return  showComponentModifyView();
+            case 'LLM-CONFIGURATION':
+                return showLLMConfigurationView();
+            case   'LLM-CONFIGURATIONS':
+                return  <div>{JSON.stringify(llmConfigurations)}</div>;
+            default:
+                return  null;
+        }
+    }
+    //console.log(view);
+    return (
+        <div className="nav-menu active">
+            <div className='nav-view-selection'>
+                <h2>What do you want to do?</h2>
+                <button onClick={() => setView('CREATE-COMPONENT')}>Create Component</button>
+                <button onClick={() => setView('LLM-CONFIGURATIONS')}>LLM Configuration</button>
+
+                
+                
+            </div>
             <div>
                 {typeSettings()}
             </div>
-            
 
         </div>
 
