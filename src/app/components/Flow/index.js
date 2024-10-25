@@ -165,6 +165,12 @@ const Flow = () => {
   console.log("ASD", nodes);
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ float: 'right', paddingRight: '50px' }}>
+        <button style={{ margin: '5px' }} onClick={() => { }}>save</button>
+        <button style={{ margin: '5px' }} onClick={() => {  }}>build</button>
+        <button style={{ margin: '5px' }} onClick={() => {  }}>build all</button>
+        <button style={{ margin: '5px' }} onClick={() => {  }}>run</button>
+      </div>
       <SideBar onAdd={onAdd}
         onDelete={onDelete}
         onModify={onModify}
