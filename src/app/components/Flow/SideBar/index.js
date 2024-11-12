@@ -8,6 +8,7 @@ import RAG from "../Components/RAG";
 import Agent from "../Components/Agent";
 import Modify from "../Components/Modify";
 import { LLMConfiguration } from "../Components/LLMConfiguration";
+import "./index.css";
 export default function SideBar({ onAdd, onDelete, onModify, onSelectLLM, nodes, modifyFocus, view, setView, llmConfigurations }) {
 
 
@@ -16,7 +17,7 @@ export default function SideBar({ onAdd, onDelete, onModify, onSelectLLM, nodes,
     const showComponentCreationView = () => {
         const ComponentSelection = () => (
             <div>
-                <h2>What kind of agent?</h2>
+                <h2>Agent Type:</h2>
                 <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
                     <option value="">Select an option</option>
                     
@@ -65,16 +66,15 @@ export default function SideBar({ onAdd, onDelete, onModify, onSelectLLM, nodes,
     return (
         <div className="nav-menu active">
             <div className='nav-view-selection'>
-                <h2>What do you want to do?</h2>
                 <button onClick={() => setView('CREATE-COMPONENT')}>Create Component</button>
                 <button onClick={() => setView('LLM-CONFIGURATIONS')}>LLM Configuration</button>
 
-                
+                <div>
+                    {typeSettings()}
+                </div>
                 
             </div>
-            <div>
-                {typeSettings()}
-            </div>
+            
 
         </div>
 

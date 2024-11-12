@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { formatRAGData } from '@/app/utils/dataFormat';
 export default function RAG({ onAdd }) {
 
-    const [inputs, setInputs] = useState([{ source: "", type: "TXT" }]);
+    const [inputs, setInputs] = useState([{ source: "", type: "text" }]);
     const [name, setName] = useState('');
     const [systemPrompt, setSystemPrompt] = useState('');
 
     const handleAddInput = () => {
-        setInputs([...inputs, { source: "", type: "TXT" }]);
+        setInputs([...inputs, { source: "", type: "text" }]);
     };
 
     const handleChange = (event, index) => {
@@ -37,7 +37,7 @@ export default function RAG({ onAdd }) {
         if(rag){
             setName('');
             setSystemPrompt('');
-            setInputs([{ source: "", type: "TXT" }]);
+            setInputs([{ source: "", type: "text" }]);
             onAdd(rag);
         }
     }
@@ -73,9 +73,10 @@ export default function RAG({ onAdd }) {
                         name="type"
                         value={item.type}
                         onChange={(event) => handleChange(event, index)}>
-                        <option value="TXT">TXT</option>
-                        <option value="PDF">PDF</option>
-                        <option value="URL">URL</option>
+                        <option value="text">Text: text</option>
+                        <option value="text_file">Path: text file</option>
+                        <option value="pdf_file">URL: PDF</option>
+                        <option value="web_page">URL: web page</option>
                     </select>
                     {inputs.length > 1 && (
                         <button onClick={() => handleDeleteInput(index)}>Delete</button>

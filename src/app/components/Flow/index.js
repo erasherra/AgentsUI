@@ -14,6 +14,10 @@ import {
 import '@xyflow/react/dist/style.css';
 import CustomNode from './Nodes/customNode';
 import SideBar from './SideBar';
+import Chat from './Chat';
+import { getRoot, getItem, initMultiAgentSystem, initializeSystem, processInput, modifyAgent, getModels, establishWebSocket } from '../../api/agentBClient';
+import { formatProcessJson } from  '../../utils/dataFormat';
+
 import './custom-nodes.css';
 
 
@@ -47,15 +51,15 @@ const initialNodes = [
 const initialEdges = [{ id: 'easd-asd2', source: 'asd', target: 'asd2' }];
 
 const LLMConfig = [
-  { name: 'OLLAMA', model: "13B", config: { temperature: 0.7 } },
-  { name: 'GPT', model: "text-davinci-003", config: { temperature: 0.7 } },
+  { name: 'OLLAMA', model: "llama3:8b-instruct-q4_0", config: { temperature: 0.7 } },
+  { name: 'GPT3', model: "gpt-3.5-turbo", config: { temperature: 0.7 } },
 ]
 
 const Flow = () => {
 
   const [uniqueID, setUniqueID] = useState(0);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [modifyFocus, setModifyFocus] = useState(undefined);
   const [sideBarView, setSideBarView] = useState("EMPTY");
 
@@ -163,14 +167,17 @@ const Flow = () => {
   
 
   console.log("ASD", nodes);
-  return (
+  console.log("Nodes", JSON.stringify(nodes));
+  console.log("Edges", JSON.stringify(edges));
+   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <div style={{ float: 'right', paddingRight: '50px' }}>
         <button style={{ margin: '5px' }} onClick={() => { }}>save</button>
-        <button style={{ margin: '5px' }} onClick={() => {  }}>build</button>
+        <button style={{ margin: '5px' }} onClick={() => { initializeSystem(formatProcessJson(nodes, edges, "Test")) }}>build</button>
         <button style={{ margin: '5px' }} onClick={() => {  }}>build all</button>
         <button style={{ margin: '5px' }} onClick={() => {  }}>run</button>
       </div>
+      
       <SideBar onAdd={onAdd}
         onDelete={onDelete}
         onModify={onModify}
@@ -180,6 +187,7 @@ const Flow = () => {
         setView={setSideBarView}
         nodes={nodes}
         llmConfigurations={LLMConfig} />
+      
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -189,7 +197,9 @@ const Flow = () => {
         nodeTypes={nodeTypes}
       >
         <Background variant="dots" gap={12} size={1} />
+        
       </ReactFlow>
+      <Chat processInput={processInput} />
     </div>
   );
 }

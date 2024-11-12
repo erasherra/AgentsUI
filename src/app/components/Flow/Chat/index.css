@@ -1,0 +1,52 @@
+.chat-container {
+    position: absolute;
+    float: right;
+    bottom: 2%;
+    right: 2%;
+    height: 750px;
+    width: 500px; /* adjust this to your desired width */
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1; /* set z-index to 1 */
+}
+
+.chat-content {
+    max-height: 695px; /* adjust this to your desired height */
+    overflow-y: auto;
+}
+
+.chat-input {
+    position: absolute;
+    padding: 10px;
+    bottom: 0;
+    width: 450px;
+}
+
+.chat-input input[type="text"] {
+    padding: 8px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    width: 80%;
+    margin-right: 5px;
+    background-color: #f7f7f7;
+    border-radius: 3px;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.chat-input button {
+    padding: 8px 16px;
+    margin-left: 5px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
