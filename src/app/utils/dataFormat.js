@@ -85,5 +85,19 @@ function formatProcessJson(nodes, edges, name) {
     return formattedProcessJson;
 }
 
+function formatProcessJsonForUI(nodes, edges, name) {    
+  if (!name || !nodes.length || !edges.length ) {
+      throw new Error("Please provide all required inputs.");
+  }
 
-export { formatRAGData, formatAgentData, formatProcessJson}
+  const formattedProcessJson = {
+      name: name,
+      nodes: nodes,
+      edges: edges,
+  };
+  console.log("formatProcessJsonForUI: ", formattedProcessJson)
+  return formattedProcessJson;
+}
+
+
+export { formatRAGData, formatAgentData, formatProcessJson, formatProcessJsonForUI}

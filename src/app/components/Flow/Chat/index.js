@@ -42,9 +42,9 @@ export default function Chat({ processInput }){
                         <li key={index}>
 
                             {username === message.author ? (
-                                <Markdown style={{ backgroundColor: 'lightgray' }}>{message.text}</Markdown>
+                                <Markdown >{message.text}</Markdown>
                             ) : (
-                                <Markdown>{message.text}</Markdown>
+                                <Markdown style={{ backgroundColor: 'lightgray' }}>{message.text}</Markdown>
                             )}
                         </li>
                     ))}

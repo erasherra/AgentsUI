@@ -16,7 +16,7 @@ import CustomNode from './Nodes/customNode';
 import SideBar from './SideBar';
 import Chat from './Chat';
 import { getRoot, getItem, initMultiAgentSystem, initializeSystem, processInput, modifyAgent, getModels, establishWebSocket } from '../../api/agentBClient';
-import { formatProcessJson } from  '../../utils/dataFormat';
+import { formatProcessJson, formatProcessJsonForUI } from '../../utils/dataFormat';
 
 import './custom-nodes.css';
 
@@ -132,7 +132,7 @@ const Flow = () => {
     console.log("THIS IS A TEST", d)
   }
 
-  
+
 
   const onAdd = useCallback((data) => {
     if (!data) {
@@ -149,7 +149,7 @@ const Flow = () => {
         {
           test: test,
           modify: () => { setModifyFocus(id); setSideBarView('MODIFY-COMPONENT'); },
-          selectLLM: () =>  { setModifyFocus(id); setSideBarView('LLM-CONFIGURATION'); },
+          selectLLM: () => { setModifyFocus(id); setSideBarView('LLM-CONFIGURATION'); },
         },
         llm: { selected: 'Empty' }
 
@@ -164,20 +164,73 @@ const Flow = () => {
     setUniqueID(uid);
   }, [nodes, setNodes]);
 
-  
+
+  const exportData = (jsonStr, filename) => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(jsonStr)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = filename;
+
+    link.click();
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files;
+    if (selectedFile && selectedFile.length > 0) {
+      const newFile = Array.from(selectedFile);
+      let json = undefined;
+      if (newFile?.length) {
+        const f = newFile[0];
+        f.text().then(result => {
+          console.log("FILE ", result)
+
+          json = JSON.parse(result)
+
+          console.log("FILE2 ", json)
+          const importedNodes = json.nodes ? json.nodes : undefined
+          const importedEdges = json.edges ? json.edges : undefined
+
+          if (importedNodes && importedEdges) {
+            console.log("FILE DEBUG")
+            
+            
+
+            importedNodes.map((node) => { node.data.functions =  {
+              test: test,
+              modify: () => { setModifyFocus(node.id); setSideBarView('MODIFY-COMPONENT'); },
+              selectLLM: () => { setModifyFocus(node.id); setSideBarView('LLM-CONFIGURATION'); },
+            }});
+            
+            console.log("FILE DEBUG2")
+            setNodes(importedNodes)
+            setEdges(importedEdges)
+          }
+        })
+
+      }
+    }
+  };
 
   console.log("ASD", nodes);
   console.log("Nodes", JSON.stringify(nodes));
   console.log("Edges", JSON.stringify(edges));
-   return (
+  return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <div style={{ float: 'right', paddingRight: '50px' }}>
         <button style={{ margin: '5px' }} onClick={() => { }}>save</button>
         <button style={{ margin: '5px' }} onClick={() => { initializeSystem(formatProcessJson(nodes, edges, "Test")) }}>build</button>
-        <button style={{ margin: '5px' }} onClick={() => {  }}>build all</button>
-        <button style={{ margin: '5px' }} onClick={() => {  }}>run</button>
+        <button style={{ margin: '5px' }} onClick={() => { exportData(formatProcessJson(nodes, edges, "Test"), "process.json") }}>export (AgentB)</button>
+        <button style={{ margin: '5px' }} onClick={() => { exportData(formatProcessJsonForUI(nodes, edges, "Test"), "ui.json") }}>export (UI)</button>
+        <input
+          type="file"
+          id="browse"
+          onChange={handleFileChange}
+          accept=".json"
+        />
       </div>
-      
+
       <SideBar onAdd={onAdd}
         onDelete={onDelete}
         onModify={onModify}
@@ -187,7 +240,7 @@ const Flow = () => {
         setView={setSideBarView}
         nodes={nodes}
         llmConfigurations={LLMConfig} />
-      
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -197,7 +250,7 @@ const Flow = () => {
         nodeTypes={nodeTypes}
       >
         <Background variant="dots" gap={12} size={1} />
-        
+
       </ReactFlow>
       <Chat processInput={processInput} />
     </div>
