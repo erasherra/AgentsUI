@@ -1,5 +1,5 @@
 "use client"
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect  } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -14,7 +14,8 @@ import {
 import '@xyflow/react/dist/style.css';
 import CustomNode from './Nodes/customNode';
 import SideBar from './SideBar';
-import Chat from './Chat';
+import Chat from './Chat/Chat';
+import ChatStream from './Chat/ChatStream';
 import { getRoot, getItem, initMultiAgentSystem, initializeSystem, processInput, modifyAgent, getModels, establishWebSocket } from '../../api/agentBClient';
 import { formatProcessJson, formatProcessJsonForUI } from '../../utils/dataFormat';
 
@@ -50,7 +51,7 @@ const initialNodes = [
 ];
 const initialEdges = [{ id: 'easd-asd2', source: 'asd', target: 'asd2' }];
 
-const LLMConfig = [
+const testLLMConfig = [
   { name: 'OLLAMA', model: "llama3:8b-instruct-q4_0", config: { temperature: 0.7 } },
   { name: 'GPT3', model: "gpt-3.5-turbo", config: { temperature: 0.7 } },
 ]
@@ -62,6 +63,18 @@ const Flow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [modifyFocus, setModifyFocus] = useState(undefined);
   const [sideBarView, setSideBarView] = useState("EMPTY");
+  const [LLMConfig, setLLMConfig] = useState(testLLMConfig);
+
+ 
+
+  useEffect(() => {
+    async function initializeSystem() {
+      const models = await getModels();
+      console.log("initializeSystem ", models)
+      setLLMConfig(models);
+    }
+    initializeSystem();
+  }, []); // Run only once when the component mounts
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -219,7 +232,9 @@ const Flow = () => {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <div style={{ float: 'right', paddingRight: '50px' }}>
-        <button style={{ margin: '5px' }} onClick={() => { }}>save</button>
+        <button style={{ margin: '5px' }} onClick={() => { }}>save (NOT WORKING)</button>
+        <button style={{ margin: '5px' }} onClick={() => { setEdges([]); setNodes([]) }}>clear all</button>
+
         <button style={{ margin: '5px' }} onClick={() => { initializeSystem(formatProcessJson(nodes, edges, "Test")) }}>build</button>
         <button style={{ margin: '5px' }} onClick={() => { exportData(formatProcessJson(nodes, edges, "Test"), "process.json") }}>export (AgentB)</button>
         <button style={{ margin: '5px' }} onClick={() => { exportData(formatProcessJsonForUI(nodes, edges, "Test"), "ui.json") }}>export (UI)</button>
@@ -252,7 +267,7 @@ const Flow = () => {
         <Background variant="dots" gap={12} size={1} />
 
       </ReactFlow>
-      <Chat processInput={processInput} />
+      {true ? <ChatStream processInput={processInput} /> : <Chat processInput={processInput} />}
     </div>
   );
 }

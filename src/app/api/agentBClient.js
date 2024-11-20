@@ -86,10 +86,17 @@ async function getRoot() {
     try {
       const response = await fetch(baseUrl + '/models'); // Replace '/' with your base URL
       const data = await response.json();
-      console.log(data); // Output: {"Hello": "TODO"}
+      console.log("getModels", data); // Output: {"Hello": "TODO"}
+      if(data && data.models && data.models.length > 0){
+        return data.models;
+      }else{
+        return [];
+      }
+      
     } catch (error) {
       console.error(error);
     }
+    return [];
   }
   
   // WebSocket endpoint

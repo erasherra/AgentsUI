@@ -16,7 +16,7 @@
     background: none;
   }
   
-  .nav-menu {
+  .nav-menu-active {
     background-color: #e220d2;
     width: 250px;
     height: 100vh;
@@ -25,11 +25,21 @@
     position: fixed;
     top: 0;
     z-index: 1;
-  }
-  
-  .nav-menu.active {
+
     left: 0;
     transition: 350ms;
+    /*
+    filter: blur(2px);
+    opacity: 0.8;
+    backdrop-filter: blur(2px), grayscale(1);
+    */
+  }
+  
+
+  .nav-view-selection{
+    opacity: 0.8;
+    filter: blur(0) !important;
+    backdrop-filter: none !important; /* remove the blur effect */
   }
   
   .nav-text {
