@@ -95,7 +95,7 @@ export default function RAG({ RAG, setModifyData  }) {
                 </div>
             ))}
 
-            <div className="body"> {JSON.stringify(inputs)} </div>
+            <div className="body"> {/*JSON.stringify(inputs)*/} </div>
 
         </div>
     );

@@ -267,7 +267,7 @@ const Flow = () => {
         <Background variant="dots" gap={12} size={1} />
 
       </ReactFlow>
-      {true ? <ChatStream processInput={processInput} /> : <Chat processInput={processInput} />}
+      {false ? <ChatStream processInput={processInput} /> : <Chat processInput={processInput} />}
     </div>
   );
 }

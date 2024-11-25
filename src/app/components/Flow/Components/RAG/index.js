@@ -87,7 +87,7 @@ export default function RAG({ onAdd }) {
                 </div>
             ))}
 
-            <div className="body"> {JSON.stringify(inputs)} </div>
+            <div className="body"> {/*JSON.stringify(inputs)*/} </div>
             <div>
                 <button onClick={() => handleRAGCreation()}>Add</button>
             </div>

@@ -61,7 +61,9 @@ async function getRoot() {
   // Post process endpoint
   export async function processInput(inputData) {
     try {
-      const response = await fetch(baseUrl + '/process', { method: 'POST', body: JSON.stringify({"query": inputData}), headers: { 'Content-Type': 'application/json' } }); // Replace '/' with your base URL
+      const v1 = '/process'
+      const v2 = '/v2/process'
+      const response = await fetch(baseUrl + v2, { method: 'POST', body: JSON.stringify({"query": inputData}), headers: { 'Content-Type': 'application/json' } }); // Replace '/' with your base URL
       const data = await response.json();
       console.log(data); // Output: {"input_data": inputData, "memory": memory}
       return data

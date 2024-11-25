@@ -20,7 +20,11 @@ export default function Chat({ processInput }){
         setNewMessage('');
         setMessages([...messages, { text: "Processing...", author: "System" }]);
         let reply = await processInput(newMessage);
-        setMessages([...messages, { text: reply.memory, author: "AI" }]);
+        let answer = reply.memory;
+        if(typeof(answer) != 'string'){
+            answer = reply.input_data
+        }
+        setMessages([...messages, { text: answer, author: "AI" }]);
         
     };
 
