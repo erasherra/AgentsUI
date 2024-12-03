@@ -1,15 +1,14 @@
-function formatRAGData(name, system_prompt, content) {
+function formatRAGData(name, system_prompt, content, evaluate) {
 
-    if (!name || !system_prompt || !content) {
+    if (!name || !system_prompt || !content || evaluate == undefined) {
         throw new Error("Please provide all required inputs.");
-        return undefined;
     }
 
     let formattedData = {
         label: name,
         customName: name,
         customType: 'RAG',
-        customConfig: { system_prompt: system_prompt, sources: [] },
+        customConfig: { system_prompt: system_prompt, sources: [], evaluate: evaluate },
     };
     if (content.length > 0) {
         formattedData.customConfig.sources = content.map((c) => ({ source: c.source, type: c.type }));
@@ -70,10 +69,10 @@ function formatEdges(edges) {
   }
 
 function formatProcessJson(nodes, edges, name) {    
-    if (!name || !nodes.length || !edges.length ) {
+    if (!name || !nodes.length ) {
         throw new Error("Please provide all required inputs.");
     }
-    const newEdges = formatEdges(edges);
+    const newEdges = edges != undefined ? formatEdges(edges): [];
     const newNodes = formatNodes(nodes);
     console.log("asd ",newNodes);
     const formattedProcessJson = {
@@ -86,7 +85,7 @@ function formatProcessJson(nodes, edges, name) {
 }
 
 function formatProcessJsonForUI(nodes, edges, name) {    
-  if (!name || !nodes.length || !edges.length ) {
+  if (!name || !nodes.length ) {
       throw new Error("Please provide all required inputs.");
   }
 

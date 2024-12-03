@@ -1,14 +1,17 @@
 "use client"
 import React, { useState } from "react";
 import { formatRAGData } from '@/app/utils/dataFormat';
+
+// TODO create better way to update the values
 export default function RAG({ RAG, setModifyData  }) {
 
     const [inputs, setInputs] = useState(RAG.customConfig.sources);
     const [lable, setLable] = useState(RAG.label);
     const [systemPrompt, setSystemPrompt] = useState(RAG.customConfig.system_prompt);
+    const [evaluate, setEvaluated] = useState(RAG.customConfig.evaluate ? RAG.customConfig.evaluate : false);
     console.log("RAG", RAG);
     const handleAddInput = () => {
-        setInputs([...inputs, { source: "", type: "TXT" }]);
+        setInputs([...inputs, { source: "", type: "text" }]);
     };
 
     const handleChange = (event, index) => {
@@ -19,7 +22,7 @@ export default function RAG({ RAG, setModifyData  }) {
             label: lable,
             customName: lable,
             customType: "RAG",
-            customConfig: {system_prompt: systemPrompt, sources: onChangeValue}
+            customConfig: {system_prompt: systemPrompt, sources: onChangeValue, evaluate: evaluate}
         });
         setInputs(onChangeValue);
     };
@@ -28,6 +31,12 @@ export default function RAG({ RAG, setModifyData  }) {
         const newArray = [...inputs];
         newArray.splice(index, 1);
         setInputs(newArray);
+        setModifyData({
+            label: lable,
+            customName: lable,
+            customType: "RAG",
+            customConfig: {system_prompt: systemPrompt, sources: inputs, evaluate: evaluate}
+        });
     };
 
     const handleNameChange = (event) => {
@@ -35,9 +44,20 @@ export default function RAG({ RAG, setModifyData  }) {
             label: event.target.value,
             customName: event.target.value,
             customType: "RAG",
-            customConfig: {system_prompt: systemPrompt, sources: inputs}
+            customConfig: {system_prompt: systemPrompt, sources: inputs, evaluate: evaluate}
         });
         setLable(event.target.value);
+    };
+    //TODO: check evaluation doesnt save the data perhaps use ref instead of hook
+    const handleEvaluationChange = (event) => {
+        setEvaluated(!evaluate);
+        setModifyData({
+            label: lable,
+            customName: lable,
+            customType: "RAG",
+            customConfig: {system_prompt: systemPrompt, sources: inputs, evaluate: evaluate}
+        });
+        
     };
 
     const handleSystemPromptChange = (event) => {
@@ -45,7 +65,7 @@ export default function RAG({ RAG, setModifyData  }) {
             label: lable,
             customName: lable,
             customType: "RAG",
-            customConfig: {system_prompt: event.target.value, sources: inputs}
+            customConfig: {system_prompt: event.target.value, sources: inputs, evaluate: evaluate}
         });
         setSystemPrompt(event.target.value);
     };
@@ -55,6 +75,16 @@ export default function RAG({ RAG, setModifyData  }) {
         <div className="container">
             <div>
                 <form>
+                    <label>
+                        Evaluate:
+                        <br />
+                        <input
+                            type="checkbox"
+                            checked={evaluate}
+                            onChange={handleEvaluationChange}
+                        />
+                    </label>
+                    <br />
                     <label>
                         Name:
                         <br />
@@ -67,6 +97,7 @@ export default function RAG({ RAG, setModifyData  }) {
                         <textarea type="text" value={systemPrompt} onChange={handleSystemPromptChange} />
                     </label>
                     <br />
+                    
                 </form>
             </div>
             {inputs.map((item, index) => (
@@ -82,9 +113,10 @@ export default function RAG({ RAG, setModifyData  }) {
                         name="type"
                         value={item.type}
                         onChange={(event) => handleChange(event, index)}>
-                        <option value="TXT">TXT</option>
-                        <option value="PDF">PDF</option>
-                        <option value="URL">URL</option>
+                        <option value="text">text</option>
+                        <option value="text_file">path: text file</option>
+                        <option value="pdf_file">url: pdf file</option>
+                        <option value="web_page">url: web page</option>
                     </select>
                     {inputs.length > 1 && (
                         <button onClick={() => handleDeleteInput(index)}>Delete</button>

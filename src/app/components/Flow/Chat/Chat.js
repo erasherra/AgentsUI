@@ -20,10 +20,18 @@ export default function Chat({ processInput }){
         setNewMessage('');
         setMessages([...messages, { text: "Processing...", author: "System" }]);
         let reply = await processInput(newMessage);
-        let answer = reply.memory;
-        if(typeof(answer) != 'string'){
-            answer = reply.input_data
+        let answer = "empty";
+        if(reply.memory){
+            answer = reply.memory;
+            if(typeof(answer) != 'string'){
+                answer = reply.input_data
+                if(typeof(answer) != 'string'){
+                    answer = JSON.stringify(answer)
+                }
+            }
+            
         }
+        console.log(answer)
         setMessages([...messages, { text: answer, author: "AI" }]);
         
     };
@@ -38,17 +46,23 @@ export default function Chat({ processInput }){
         }
     };
 
+    
     return (
         <div className="chat-container">
             <div className="chat-content">
                 <ul>
                     {messages.map((message, index) => (
-                        <li key={index}>
+                        <li key={index} >
 
                             {username === message.author ? (
-                                <Markdown >{message.text}</Markdown>
+                                <div style={{whiteSpace: 'pre-wrap'}}>
+                                    {message.text}
+                                </div>
+                                
                             ) : (
-                                <Markdown style={{ backgroundColor: 'lightgray' }}>{message.text}</Markdown>
+                                <div style={{ backgroundColor: 'lightgray', whiteSpace: 'pre-wrap' }}>
+                                {message.text}
+                                </div>
                             )}
                         </li>
                     ))}

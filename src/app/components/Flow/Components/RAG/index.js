@@ -6,6 +6,7 @@ export default function RAG({ onAdd }) {
     const [inputs, setInputs] = useState([{ source: "", type: "text" }]);
     const [name, setName] = useState('');
     const [systemPrompt, setSystemPrompt] = useState('');
+    const [evaluate, setEvaluated] = useState(false);
 
     const handleAddInput = () => {
         setInputs([...inputs, { source: "", type: "text" }]);
@@ -32,12 +33,17 @@ export default function RAG({ onAdd }) {
         setSystemPrompt(event.target.value);
     };
 
+    const handleEvaluationChange = () => {
+        setEvaluated(!evaluate);
+    };
+
     const handleRAGCreation = () => {
-        const rag = formatRAGData(name, systemPrompt, inputs);
-        if(rag){
+        const rag = formatRAGData(name, systemPrompt, inputs, evaluate);
+        if (rag) {
             setName('');
             setSystemPrompt('');
             setInputs([{ source: "", type: "text" }]);
+            setEvaluated(false);
             onAdd(rag);
         }
     }
@@ -46,6 +52,16 @@ export default function RAG({ onAdd }) {
         <div className="container">
             <div>
                 <form>
+                    <label>
+                        Evaluate:
+                        <br />
+                        <input
+                            type="checkbox"
+                            checked={evaluate}
+                            onChange={handleEvaluationChange}
+                        />
+                    </label>
+                    <br />
                     <label>
                         Name:
                         <br />
