@@ -32,13 +32,13 @@ export default function Agent({agent, setModifyData }) {
             <div>
             <form>
                     <label>
-                        Name:
+                        <p>Name:</p>
                         <br />
                         <input type="text" value={name} onChange={handleNameChange} />
                     </label>
                     <br />
                     <label>
-                        System Prompt:
+                        <p>System Prompt:</p>
                         <br />
                         <textarea type="text" value={systemPrompt} onChange={handleSystemPromptChange} />
                     </label>

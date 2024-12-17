@@ -13,6 +13,8 @@ import {
 
 import '@xyflow/react/dist/style.css';
 import CustomNode from './Nodes/customNode';
+import OutputNode from './Nodes/outputNode';
+import InputNode from './Nodes/inputNode';
 import SideBar from './SideBar';
 import Chat from './Chat/Chat';
 import ChatStream from './Chat/ChatStream';
@@ -20,34 +22,27 @@ import { getRoot, getItem, initMultiAgentSystem, initializeSystem, processInput,
 import { formatProcessJson, formatProcessJsonForUI } from '../../utils/dataFormat';
 
 import './custom-nodes.css';
-
-
+import './rootIndex.css';
 
 // we define the nodeTypes outside of the component to prevent re-renderings
 // you could also use useMemo inside the component
-const nodeTypes = { customNode: CustomNode };
+const nodeTypes = { customNode: CustomNode, outputNode: OutputNode, inputNode: InputNode };
 
 const initialNodes = [
   {
-    id: 'asd',
-    type: 'customNode',
+    id: 'i',
+    type: 'inputNode',
     position: { x: 300, y: 100 },
-    data: { assigned: { label: '1', customType: 'INPUT' } }
+    data: { assigned: { label: 'INPUT', customType: 'INPUT' } }
   },
 
   {
-    id: 'asd2',
-    type: 'customNode',
+    id: 'o',
+    type: 'outputNode',
     position: { x: 400, y: 200 },
-    data: { assigned: { label: '2', customType: 'AGENT', customName: 'something', customConfig: { system_prompt: "You are a..." } } }
+    data: { assigned: { label: 'OUTPUT', customType: 'OUTPUT' } }  
   },
 
-  {
-    id: 'asd3',
-    type: 'customNode',
-    position: { x: 400, y: 300 },
-    data: { assigned: { label: '3', customType: 'RAG' } }
-  },
 ];
 const initialEdges = [{ id: 'easd-asd2', source: 'asd', target: 'asd2' }];
 
@@ -59,12 +54,16 @@ const testLLMConfig = [
 const Flow = () => {
 
   const [uniqueID, setUniqueID] = useState(0);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [modifyFocus, setModifyFocus] = useState(undefined);
   const [sideBarView, setSideBarView] = useState("EMPTY");
   const [LLMConfig, setLLMConfig] = useState(testLLMConfig);
+  const [isOpen, setIsOpen] = useState(false);
 
+    const handleToggle = () => {
+        setIsOpen(!isOpen);
+    };
  
 
   useEffect(() => {
@@ -100,6 +99,7 @@ const Flow = () => {
         } : node))
       );
     }
+    setSideBarView('EMPTY');
   }, [nodes, setNodes]);
 
   const onSelectLLM = useCallback((id, selected) => {
@@ -136,10 +136,11 @@ const Flow = () => {
     if (nodeToRemove) {
 
       setNodes((nds) => nds.filter(item => item.id !== nodeToRemove.id));
+      setEdges((eds) => eds.filter(item => item.source !== nodeToRemove.id));
     }
     setModifyFocus(undefined);
     setSideBarView('EMPTY');
-  }, [nodes, setNodes]);
+  }, [nodes, setNodes, setEdges]);
 
   const test = (d) => {
     console.log("THIS IS A TEST", d)
@@ -175,6 +176,7 @@ const Flow = () => {
     };
     setNodes((nds) => nds.concat(newNode));
     setUniqueID(uid);
+    setSideBarView('EMPTY');
   }, [nodes, setNodes]);
 
 
@@ -226,12 +228,19 @@ const Flow = () => {
     }
   };
 
+  const getChat = () => {
+    const STREAM = false;
+    return STREAM ? <ChatStream processInput={processInput} /> : <Chat processInput={processInput} />
+  }
+
   console.log("ASD", nodes);
   console.log("Nodes", JSON.stringify(nodes));
   console.log("Edges", JSON.stringify(edges));
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <div style={{ float: 'right', paddingRight: '50px' }}>
+      
+        <button style={{ margin: '5px' }} onClick={handleToggle}>Toggle Chat</button>
         <button style={{ margin: '5px' }} onClick={() => { }}>save (NOT WORKING)</button>
         <button style={{ margin: '5px' }} onClick={() => { setEdges([]); setNodes([]) }}>clear all</button>
 
@@ -267,7 +276,8 @@ const Flow = () => {
         <Background variant="dots" gap={12} size={1} />
 
       </ReactFlow>
-      {false ? <ChatStream processInput={processInput} /> : <Chat processInput={processInput} />}
+      {isOpen ? getChat() : <div></div>}
+      
     </div>
   );
 }

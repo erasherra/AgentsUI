@@ -50,13 +50,14 @@ export default function RAG({ RAG, setModifyData  }) {
     };
     //TODO: check evaluation doesnt save the data perhaps use ref instead of hook
     const handleEvaluationChange = (event) => {
-        setEvaluated(!evaluate);
+        
         setModifyData({
             label: lable,
             customName: lable,
             customType: "RAG",
-            customConfig: {system_prompt: systemPrompt, sources: inputs, evaluate: evaluate}
+            customConfig: {system_prompt: systemPrompt, sources: inputs, evaluate: !evaluate}
         });
+        setEvaluated(!evaluate);
         
     };
 
@@ -76,7 +77,7 @@ export default function RAG({ RAG, setModifyData  }) {
             <div>
                 <form>
                     <label>
-                        Evaluate:
+                        <p>Evaluate:</p>
                         <br />
                         <input
                             type="checkbox"
@@ -86,13 +87,13 @@ export default function RAG({ RAG, setModifyData  }) {
                     </label>
                     <br />
                     <label>
-                        Name:
+                        <p>Name:</p>
                         <br />
                         <input type="text" value={lable} onChange={handleNameChange} />
                     </label>
                     <br />
                     <label>
-                        System Prompt:
+                        <p>System Prompt:</p>
                         <br />
                         <textarea type="text" value={systemPrompt} onChange={handleSystemPromptChange} />
                     </label>
@@ -119,10 +120,10 @@ export default function RAG({ RAG, setModifyData  }) {
                         <option value="web_page">url: web page</option>
                     </select>
                     {inputs.length > 1 && (
-                        <button onClick={() => handleDeleteInput(index)}>Delete</button>
+                        <button className="button" onClick={() => handleDeleteInput(index)}>Delete</button>
                     )}
                     {index === inputs.length - 1 && (
-                        <button onClick={() => handleAddInput()}>Add</button>
+                        <button className="button" onClick={() => handleAddInput()}>Add</button>
                     )}
                 </div>
             ))}

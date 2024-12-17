@@ -1,0 +1,13 @@
+button {
+    background-color: #fff; /* White background */
+    border: 1px solid #000; /* Black thin border */
+    color: #000; /* Black text */
+    padding: 0.5em 1em; /* Some default padding to make the button more readable */
+    font-size: 11px;
+    cursor: pointer; /* Change the mouse cursor to a hand when hovering over the button */
+  }
+  
+  button :hover {
+    background-color: #fff; /* Keep the white background on hover */
+    border-color: #333; /* Darken the border slightly on hover */
+  }

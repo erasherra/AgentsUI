@@ -58,16 +58,18 @@ export default function SideBar({ onAdd, onDelete, onModify, onSelectLLM, nodes,
                 return showLLMConfigurationView();
             case   'LLM-CONFIGURATIONS':
                 return  <div style={{color: "black", width: "200px", height: "200px"}}>{JSON.stringify(llmConfigurations)}</div>;
+            case 'EMPTY':
+                return <div></div>;
             default:
-                return  null;
+                return  <div></div>;
         }
     }
     //console.log(view);
     return (
         <div className="nav-menu-active">
             <div className='nav-view-selection'>
-                <button onClick={() => setView('CREATE-COMPONENT')}>Create Component</button>
-                <button onClick={() => setView('LLM-CONFIGURATIONS')}>LLM Configuration</button>
+                <button className="button" onClick={() => setView('CREATE-COMPONENT')}>Create Component</button>
+                <button className="button" onClick={() => setView('LLM-CONFIGURATIONS')}>LLM Configuration</button>
 
                 <div className='nav-view-types'>
                     {typeSettings()}

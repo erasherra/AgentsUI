@@ -40,8 +40,8 @@ export default function Modify({ id, nodes, onDelete, onModify, modifyFocus }) {
                 </div>
 
                 <div>
-                    <button onClick={() => handleAgentModification()}>Save</button>
-                    <button onClick={() => handleDelete()}>Delete</button>
+                    <button className="button" onClick={() => handleAgentModification()}>Save</button>
+                    <button className="button" onClick={() => handleDelete()}>Delete</button>
                 </div>
             </div>
         </>

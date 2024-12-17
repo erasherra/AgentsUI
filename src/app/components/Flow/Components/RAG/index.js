@@ -63,13 +63,13 @@ export default function RAG({ onAdd }) {
                     </label>
                     <br />
                     <label>
-                        Name:
+                        <p>Name:</p>
                         <br />
                         <input type="text" value={name} onChange={handleNameChange} />
                     </label>
                     <br />
                     <label>
-                        System Prompt:
+                        <p>System Prompt:</p>
                         <br />
                         <textarea type="text" value={systemPrompt} onChange={handleSystemPromptChange} />
                     </label>
@@ -95,17 +95,17 @@ export default function RAG({ onAdd }) {
                         <option value="web_page">URL: web page</option>
                     </select>
                     {inputs.length > 1 && (
-                        <button onClick={() => handleDeleteInput(index)}>Delete</button>
+                        <button className="button" onClick={() => handleDeleteInput(index)}>Delete</button>
                     )}
                     {index === inputs.length - 1 && (
-                        <button onClick={() => handleAddInput()}>Add</button>
+                        <button className="button" onClick={() => handleAddInput()}>Add</button>
                     )}
                 </div>
             ))}
 
             <div className="body"> {/*JSON.stringify(inputs)*/} </div>
             <div>
-                <button onClick={() => handleRAGCreation()}>Add</button>
+                <button className="button" onClick={() => handleRAGCreation()}>Add</button>
             </div>
         </div>
     );

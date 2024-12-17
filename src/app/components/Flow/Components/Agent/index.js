@@ -30,20 +30,20 @@ export default function Agent({onAdd}) {
             <div>
             <form>
                     <label>
-                        Name:
+                        <p>Name:</p>
                         <br />
                         <input type="text" value={name} onChange={handleNameChange} />
                     </label>
                     <br />
                     <label>
-                        System Prompt:
+                    <p>System Prompt:</p>
                         <br />
                         <textarea type="text" value={systemPrompt} onChange={handleSystemPromptChange} />
                     </label>
                     <br />
                 </form>
                 <div>
-                <button onClick={() => handleAgentCreation()}>Add</button>
+                <button className="button" onClick={() => handleAgentCreation()}>Add</button>
             </div>
             </div>
       </>

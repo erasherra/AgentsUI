@@ -42,19 +42,27 @@ function formatEdges(edges) {
       }
       edgeDict[edge.source].push(edge.target);
       
-      const formattedEdge = {
-        source: edge.source,
-        target: edgeDict[edge.source],
-        id: `xy-edge__${edge.source}-` + edgeDict[edge.source].join('-'),
-      };
-      formattedEdges.push(formattedEdge);
+      let existingEdgeIndex = formattedEdges.findIndex((e) => e.source === edge.source);
+
+      if (existingEdgeIndex !== -1) {
+        // Update the existing edge
+        formattedEdges[existingEdgeIndex].target = edgeDict[edge.source];
+        formattedEdges[existingEdgeIndex].id = `xy-edge__${edge.source}-` + edgeDict[edge.source].join('-');
+      } else {
+        const formattedEdge = {
+          source: edge.source,
+          target: edgeDict[edge.source],
+          id: `xy-edge__${edge.source}-` + edgeDict[edge.source].join('-'),
+        };
+        formattedEdges.push(formattedEdge);
+      }
     });
     console.log("formatEdges: ", formattedEdges)
     return formattedEdges;
   }
 
   function formatNodes(nodes) {
-    return nodes.map((node) => ({
+    return nodes.map((node) => ( node.id != 'i' && node.id != 'o' ? {
       id: node.id,
       assigned: {
         label: node.data.assigned.label || '',
@@ -65,6 +73,8 @@ function formatEdges(edges) {
           : {}
       },
       llm: { selected: node.data.llm.selected }
+    }: {
+      id: node.id
     }));
   }
 
